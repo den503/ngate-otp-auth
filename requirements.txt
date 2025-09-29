@@ -1,0 +1,6 @@
+cffi==2.0.0
+cryptography==46.0.1
+pexpect==4.9.0
+ptyprocess==0.7.0
+pycparser==2.23
+pyotp==2.9.0
