@@ -41,3 +41,6 @@ htmlcov/
 Thumbs.db
 *.db
 *.db-journal
+
+# Project files
+credentials.json
