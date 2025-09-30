@@ -25,6 +25,18 @@ class InputHandler:
         """Запрашивает мастер-пароль для расшифровки"""
         return getpass.getpass("🔐 Введите мастер-пароль для расшифровки: ")
 
+    @staticmethod
+    def get_new_password():
+        """Запрашивает новый пароль и подтверждение"""
+        new_password = getpass.getpass("🔐 Введите новый PASSWORD: ")
+        confirm_password = getpass.getpass("🔐 Подтвердите новый PASSWORD: ")
+
+        if new_password != confirm_password:
+            print("❌ Пароли не совпадают.")
+            return None
+
+        return new_password
+
 
 def log_time(message):
     """Выводит сообщение с текущим временем"""

@@ -5,6 +5,47 @@ from connection import VPNConnection
 from utils import InputHandler, log_time
 
 
+def show_menu():
+    """Отображает меню с доступными действиями"""
+    print("\n📋 Меню:")
+    print("1. Подключиться к VPN")
+    print("2. Сменить пароль")
+    print("3. Выход")
+    return input("Выберите действие (1-3): ")
+
+
+def change_password(credentials_manager, input_handler):
+    """Функция для смены пароля"""
+    print("\n🔄 Смена пароля")
+
+    # Запрашиваем мастер-пароль для аутентификации
+    master_password = input_handler.get_master_password()
+
+    # Проверяем, правильный ли мастер-пароль, пытаясь получить учетные данные
+    login, old_password, secret_key = credentials_manager.get_credentials(master_password)
+
+    if not login or not old_password or not secret_key:
+        print("❌ Неверный мастер-пароль. Операция отменена.")
+        return None, None, None
+
+    # Запрашиваем новый пароль
+    new_password = input_handler.get_new_password()
+
+    if not new_password:
+        print("❌ Смена пароля отменена.")
+        return login, old_password, secret_key
+
+    # Обновляем пароль
+    success = credentials_manager.update_password(new_password, master_password)
+
+    if success:
+        print("✅ Пароль успешно изменен!")
+        return login, new_password, secret_key
+    else:
+        print("❌ Не удалось изменить пароль.")
+        return login, old_password, secret_key
+
+
 def main():
     # Инициализация менеджеров
     credentials_manager = CredentialsManager()
@@ -34,26 +75,37 @@ def main():
 
     log_time("⏰ Время запуска")
 
-    # Цикл поддержания работы скрипта
+    # Основной цикл программы с меню
     while True:
-        try:
-            print("\n🚀 Запуск подключения...")
-            success = vpn_connection.connect(login, password, secret_key)
+        choice = show_menu()
 
-            if not success:
-                print("⚠️ Соединение было разорвано. Повторное подключение через 10 секунд...")
-                time.sleep(10)
-            else:
-                # Если успешно завершено по запросу пользователя
-                break
+        if choice == "1":
+            # Подключение к VPN
+            try:
+                print("\n🚀 Запуск подключения...")
+                success = vpn_connection.connect(login, password, secret_key)
 
-        except KeyboardInterrupt:
-            print("\n👋 Программа завершена пользователем.")
+                if not success:
+                    print("⚠️ Соединение было разорвано. Возвращение в меню...")
+                    time.sleep(3)
+            except KeyboardInterrupt:
+                print("\n👋 Подключение прервано пользователем.")
+            except Exception as e:
+                print(f"❌ Непредвиденная ошибка: {str(e)}")
+                print("🔄 Возврат в меню через 3 секунды...")
+                time.sleep(3)
+
+        elif choice == "2":
+            # Смена пароля
+            login, password, secret_key = change_password(credentials_manager, input_handler)
+
+        elif choice == "3":
+            # Выход
+            print("\n👋 Программа завершена.")
             break
-        except Exception as e:
-            print(f"❌ Непредвиденная ошибка: {str(e)}")
-            print("🔄 Перезапуск через 30 секунд...")
-            time.sleep(30)
+
+        else:
+            print("⚠️ Неверный выбор. Пожалуйста, выберите 1, 2 или 3.")
 
 
 if __name__ == "__main__":
