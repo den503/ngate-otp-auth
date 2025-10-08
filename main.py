@@ -10,9 +10,26 @@ def show_menu():
     print("\n📋 Меню:")
     print("1. Подключиться к VPN")
     print("2. Сменить пароль")
-    print("3. Выход")
-    return input("Выберите действие (1-3): ")
+    print("3. Сбросить настройки")
+    print("4. Выход")
+    return input("Выберите действие (1-4): ")
 
+
+def reset_settings(credentials_manager):
+    """Функция для сброса настроек (удаления файла credentials.json)"""
+    print("\n🗑️ Сброс настроек")
+    confirmation = input("⚠️ Все сохраненные учетные данные будут удалены. Продолжить? (д/н): ")
+
+    if confirmation.lower() in ['д', 'da', 'y', 'yes']:
+        if credentials_manager.reset_credentials():
+            print("✅ Настройки успешно сброшены. При следующем запуске потребуется повторная настройка.")
+            return True
+        else:
+            print("⚠️ Файл с настройками не найден или не может быть удален.")
+            return False
+    else:
+        print("🔄 Сброс настроек отменен.")
+        return False
 
 def change_password(credentials_manager, input_handler):
     """Функция для смены пароля"""
@@ -100,6 +117,12 @@ def main():
             login, password, secret_key = change_password(credentials_manager, input_handler)
 
         elif choice == "3":
+            # Сброс настроек
+            if reset_settings(credentials_manager):
+                print("\n👋 Программа завершена. При следующем запуске потребуется повторная настройка.")
+                break
+
+        elif choice == "4":
             # Выход
             print("\n👋 Программа завершена.")
             break

@@ -81,3 +81,10 @@ class CredentialsManager:
 
         except Exception:
             return False
+
+    def reset_credentials(self):
+        """Удаляет файл с учетными данными"""
+        if os.path.exists(self.json_path):
+            os.remove(self.json_path)
+            return True
+        return False
