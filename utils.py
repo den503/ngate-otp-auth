@@ -11,12 +11,20 @@ class InputHandler:
         password = getpass.getpass("🔐 Введите PASSWORD: ")
         secret_key = getpass.getpass("🔑 Введите SECRET_KEY: ")
 
-        master_password = getpass.getpass("🔐 Создайте мастер-пароль для шифрования: ")
-        confirm_master_password = getpass.getpass("🔐 Подтвердите мастер-пароль: ")
+        while True:
+            master_password = getpass.getpass("🔐 Создайте мастер-пароль для шифрования: ")
 
-        if master_password != confirm_master_password:
-            print("❌ Мастер-пароли не совпадают. Выход.")
-            sys.exit(1)
+            if len(master_password) < 6:
+                print("❌ Мастер-пароль должен содержать не менее 6 символов.")
+                continue
+
+            confirm_master_password = getpass.getpass("🔐 Подтвердите мастер-пароль: ")
+
+            if master_password != confirm_master_password:
+                print("❌ Мастер-пароли не совпадают.")
+                continue
+
+            break
 
         return login, password, secret_key, master_password
 

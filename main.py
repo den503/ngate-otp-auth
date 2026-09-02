@@ -9,10 +9,11 @@ def show_menu():
     """Отображает меню с доступными действиями"""
     print("\n📋 Меню:")
     print("1. Подключиться к VPN")
-    print("2. Сменить пароль")
-    print("3. Сбросить настройки")
-    print("4. Выход")
-    return input("Выберите действие (1-4): ")
+    print("2. Сгенерировать OTP (без подключения)")
+    print("3. Сменить пароль")
+    print("4. Сбросить настройки")
+    print("5. Выход")
+    return input("Выберите действие (1-5): ")
 
 
 def reset_settings(credentials_manager):
@@ -112,17 +113,21 @@ def main():
                 print("🔄 Возврат в меню через 3 секунды...")
                 time.sleep(3)
 
-        elif choice == "2":
+        elif choice == '2':
+            otp = vpn_connection.get_totp(secret_key)
+            print(f"\n🔑 Сгенерированный OTP: {otp}")
+
+        elif choice == "3":
             # Смена пароля
             login, password, secret_key = change_password(credentials_manager, input_handler)
 
-        elif choice == "3":
+        elif choice == "4":
             # Сброс настроек
             if reset_settings(credentials_manager):
                 print("\n👋 Программа завершена. При следующем запуске потребуется повторная настройка.")
                 break
 
-        elif choice == "4":
+        elif choice == "5":
             # Выход
             print("\n👋 Программа завершена.")
             break

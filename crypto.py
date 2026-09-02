@@ -7,7 +7,7 @@ import base64
 class CryptoManager:
     def __init__(self):
         # В реальном проекте используйте случайную соль и храните её безопасно
-        self.salt = b'static_salt_for_example'
+        self.salt = b'SALT_FOR_TEST'
         self.iterations = 100000
 
     def get_encryption_key(self, master_password):
